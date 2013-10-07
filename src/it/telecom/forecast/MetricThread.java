@@ -77,7 +77,7 @@ public class MetricThread {
 	*/
 	private Date cubeStop = null;
 	private Date cubeStart = null;
-	private String cubeLimit = "250";
+	private String cubeLimit = null;
 	private String cubeStep = "3e5"; // 5minuti
 	//private String cubeStep = "36e5"; // 60minuti
 	SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000'Z'");
@@ -94,11 +94,12 @@ public class MetricThread {
 		}
 		this.setCubeStart(start);
 		System.out.println("Start date: " + this.getCubeStart());
-		while(true) {
+	/*	while(true) {
 			if(this.getCubeStart().compareTo(end) == 0){
 				System.out.println("LAST DAY");
 				break;
 			}
+			*/
 			cal.setTime(this.getCubeStart());
 			cal.add(Calendar.DATE, 1);// ADD one day
 			this.setCubeStop(cal.getTime());
@@ -164,7 +165,7 @@ public class MetricThread {
 				System.err.println("IOException: " + e.getMessage());
 				System.exit(-2);
 			}
-		}
+		//}
 	} 
 	
 	public ArrayList<Metric> getOutbuffer() {

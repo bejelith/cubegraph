@@ -12,27 +12,24 @@ import net.sourceforge.openforecast.DataSet;
 public class Forecast {
 
 	private FileWriter fileWritter;
-	private Date[] keys;
 	private double[] datasource;
 	private String file;
 
 	public Forecast(Date[] keys, double[] datasource, String file) {
 		this.datasource = datasource;
-		this.keys = keys;
 		this.file = file;
-		try {
+		/*try {
 			fileWritter = new FileWriter(new File(
 					"c:/Users/bejelith/desktop/test/" + file + ".csv"), false);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
-		}
+		}*/
 	}
 
 	public double[] calc(boolean save) throws IOException {
 		int i = 0;
-		Date time;
-		SimpleDateFormat outformat = new SimpleDateFormat("HH:mm:ss");
+		new SimpleDateFormat("HH:mm:ss");
 		DoubleExponentialSmoothingTest smooth = new DoubleExponentialSmoothingTest("uno", 0.8, 0.8);
 		DataSet dataset = smooth.testDoubleExponentialSmoothing(datasource);
 		Iterator<DataPoint> it = dataset.iterator();

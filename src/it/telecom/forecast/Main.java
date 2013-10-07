@@ -32,7 +32,7 @@ public class Main {
 		Calendar cal = Calendar.getInstance();
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		Date[] Xdata; 
-		Date tmpdate = null;
+		Date startdate = null;
 		double[] dataValues;
 		double[] prevision = null;
 		boolean save = false;
@@ -116,36 +116,41 @@ public class Main {
 	 
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
-		while(!selected){
+		while(true){
+			while(!selected){
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			selected = false;
+			//frame.setVisible(false);
+			//frame.dispose();
+			cal.set((Integer)year.getValue(), (Integer)month.getValue() - 1, (Integer)day.getValue(), 0, 0, 0);
+			cal.set((Integer)year.getValue(), (Integer)month.getValue() - 1, (Integer)day.getValue(), 7, 0);
+			startdate = cal.getTime();
+			cal.set((Integer)year.getValue(), (Integer)month.getValue() - 1, (Integer)day.getValue(), 20, 0);
+			save = chckbxSaveToFile.isSelected();
+			metric.chiamaMetrica(startdate, cal.getTime(), lblExpression.getText());
+			Xdata = metric.keysToArray();
+			dataValues = metric.toArray();
+			Forecast f = new Forecast(
+					Xdata, 
+					dataValues, 
+					datefile.format(startdate)
+					);
 			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
+				prevision = f.calc(save);
+			} catch (IOException e) {
+				System.err.println("Impossibile salvare i dati su file");
 				e.printStackTrace();
 			}
+			Chart chart = new Chart("Dati e previsione dal " + startdate + " al " + cal.getTime(), "b", Xdata, dataValues, prevision);
+	    	chart.setVisible(true);
+	    	chart.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}
-		frame.setVisible(false);
-		frame.dispose();
-		cal.set((Integer)year.getValue(), (Integer)month.getValue() - 1, (Integer)day.getValue(), 0, 0, 0);
-		tmpdate = cal.getTime();
-		cal.add(Calendar.DATE, 1);
-		save = chckbxSaveToFile.isSelected();
-		metric.chiamaMetrica(tmpdate, cal.getTime(), lblExpression.getText());
-		Xdata = metric.keysToArray();
-		dataValues = metric.toArray();
-		Forecast f = new Forecast(
-				Xdata, 
-				dataValues, 
-				datefile.format(tmpdate)
-				);
-		try {
-			prevision = f.calc(save);
-		} catch (IOException e) {
-			System.err.println("Impossibile salvare i dati su file");
-			e.printStackTrace();
-		}
-		Chart chart = new Chart("Dati e previsione dal " + tmpdate + " al " + cal.getTime(), "b", Xdata, dataValues, prevision);
-    	chart.setVisible(true);
-		System.out.println("Exit");
+		
 	}
 	
 
