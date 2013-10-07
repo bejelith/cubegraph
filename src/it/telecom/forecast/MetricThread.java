@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import com.google.gson.Gson;
 
@@ -25,56 +26,7 @@ public class MetricThread {
 	private String cubeHost = "172.16.3.210";
 	private String cubePort = "1081";
 	private String cubeExpression = "sum(record_cdr_osp_3_1(1))";
-	/*private String cubeExpression = 
-			"sum(record_cdr_osp_3_1.eq(C102,'409922200301'))+"+ 
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200311'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200312'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200313'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200314'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200321'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200322'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'409922200323'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199111345'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199111678'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199121122'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199122123'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199123124'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199125126'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199127127'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199131346'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199145345'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199168678'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199178678'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199190191'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199191192'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199192193'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199193194'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199194194'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199198199'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199199345'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199309345'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199309609'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00199309809'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800015171'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800018810'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800054450'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800079300'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800104401'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800110120'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800113738'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800190330'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800280355'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800302203'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800319784'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800345345'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800431531'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800435464'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c00800922938'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c027990096'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c027990097'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c027990098'))+"+
-            "sum(record_cdr_osp_3_1.eq(C102,'c027990099'))";
-	*/
+	
 	private Date cubeStop = null;
 	private Date cubeStart = null;
 	private String cubeLimit = null;
@@ -104,6 +56,7 @@ public class MetricThread {
 			cal.add(Calendar.DATE, 1);// ADD one day
 			this.setCubeStop(cal.getTime());
 			System.out.println("Stop date: " + this.getCubeStop());
+			dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			sb.append("http://" + cubeHost + ":" + cubePort	+ "/1.0/metric/get?expression=" + cubeExpression.replace("+", "%2B"));
 			if (this.cubeStart != null) {
 				sb.append("&start=" + dateformat.format(cubeStart));
